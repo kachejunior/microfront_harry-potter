@@ -1,16 +1,39 @@
 "use client";
-
-import { Sheet } from "@mui/joy";
 import { getAllCharacter } from "./service/rickAndMorty.service";
 import { useEffect, useState, useRef } from "react";
 import { ICharacter } from "@/app/interfaces";
 import { Pagination } from "@mui/material";
 import { useSearchParams, useRouter } from "next/navigation";
-import styles from "./page.module.scss";
 import { Search } from "./components/Search/Search";
 import HeroCard from "./components/HeroCard/HeroCard";
+import styled from "styled-components";
 
-export default function People() {
+const MainStyle = styled.main`
+  padding: 20px;
+  .main__contain {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .main__pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 !important;
+    button {
+      color: #ffe81f !important;
+      &:hover {
+        background: #f0e9a8;
+        color: #000000 !important;
+      }
+      &.Mui-selected {
+        background: #f0e9a8;
+        color: #000000 !important;
+      }
+    }
+  }
+`;
+
+export default function Main() {
   const searchParams = useSearchParams();
   const pageSelect = searchParams.get("page")
     ? parseInt(searchParams.get("page") || "")
@@ -18,7 +41,6 @@ export default function People() {
 
   const [characters, setCharacters] = useState<ICharacter[]>([]);
   const [pages, setPages] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(pageSelect);
   const [search, setSearch] = useState("");
 
@@ -28,37 +50,56 @@ export default function People() {
   useEffect(() => {
     if (!initialized.current) {
       initialized.current = true;
-      getAllCharacter({ page, search }).then((result) => {
-        setCharacters(result.results);
-        setPages(result.info.pages);
-        setLoading(false);
-      });
+      getAllCharacter({ page })
+        .then((result) => {
+          setCharacters(result.results);
+          setPages(result.info.pages);
+        })
+        .catch((err) => {
+          console.warn(err);
+          setCharacters([]);
+        });
     }
-  }, [setCharacters, page, search]);
+  }, [setCharacters, search, page]);
 
   const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     initialized.current = false;
-    setLoading(true);
     setPage(value);
     router.push(`/?page=${value}`);
   };
 
   const handleSearch = (value: string) => {
-    initialized.current = false;
-    setLoading(true);
-    setPage(1);
     setSearch(value);
   };
 
+  const handleSubmit = () => {
+    setPage(1);
+    getAllCharacter({ page: 1, name: search })
+      .then((result) => {
+        setCharacters(result.results);
+        setPages(result.info.pages);
+      })
+      .catch((err) => {
+        console.warn(err);
+        setCharacters([]);
+      });
+  };
+
   return (
-    <main className={styles.peopleMain}>
-      <Search search={search} handleSearch={handleSearch} />
+    <MainStyle>
+      <Search
+        search={search}
+        handleSearch={handleSearch}
+        handleSubmit={handleSubmit}
+      />
 
-      {characters.map((character: ICharacter) => (
-        <HeroCard key={character.id} character={character} />
-      ))}
+      <div className="main__contain">
+        {characters.map((character: ICharacter) => (
+          <HeroCard key={character.id} character={character} />
+        ))}
+      </div>
 
-      <div className={styles.pagination}>
+      <div className="main__pagination">
         <Pagination
           color="primary"
           count={pages}
@@ -66,6 +107,6 @@ export default function People() {
           onChange={handleChange}
         />
       </div>
-    </main>
+    </MainStyle>
   );
 }

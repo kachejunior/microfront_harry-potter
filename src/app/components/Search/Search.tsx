@@ -1,10 +1,21 @@
 import { ISearchProp } from "@/app/interfaces";
-import styles from "./search.module.scss";
 import { TextField } from "@mui/material";
+import { FormEvent } from "react";
 
-export const Search = ({ handleSearch, search }: ISearchProp) => {
+import styled from "styled-components";
+
+const SearchForm = styled.form`
+  background: #ffffff;
+`;
+
+export const Search = ({ handleSearch, handleSubmit, search }: ISearchProp) => {
   return (
-    <div className={styles.search}>
+    <SearchForm
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        handleSubmit();
+      }}
+    >
       <TextField
         id="filled-basic"
         label="Search"
@@ -15,6 +26,6 @@ export const Search = ({ handleSearch, search }: ISearchProp) => {
         }}
         value={search}
       />
-    </div>
+    </SearchForm>
   );
 };

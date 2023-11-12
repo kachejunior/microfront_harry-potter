@@ -1,5 +1,17 @@
 import { createKey } from "next/dist/shared/lib/router/router";
-import styles from "./listAttributes.module.scss";
+import styled from "styled-components";
+
+const ListAttributeDiv = styled.div`
+  ul {
+    li {
+      list-style: none;
+      span {
+        font-weight: 900;
+        margin-right: 10px;
+      }
+    }
+  }
+`;
 
 export const ListAttributes = ({
   listAttribute,
@@ -7,7 +19,7 @@ export const ListAttributes = ({
   listAttribute: { title: string; value: string }[];
 }) => {
   return (
-    <div className={styles.listAttr}>
+    <ListAttributeDiv>
       <ul>
         {listAttribute.map((attr: { title: string; value: string }) => (
           <li key={createKey()}>
@@ -16,6 +28,6 @@ export const ListAttributes = ({
           </li>
         ))}
       </ul>
-    </div>
+    </ListAttributeDiv>
   );
 };

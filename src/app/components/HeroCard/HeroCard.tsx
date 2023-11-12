@@ -2,9 +2,49 @@
 
 import { IHeroCardProps } from "@/app/interfaces";
 import { ListAttributes } from "@/app/components/ListAttributes/ListAttributes";
-import styles from "./heroCard.module.scss";
+import styled from "styled-components";
 
-export default function HeroCard({ key, character }: IHeroCardProps) {
+const HeroCardMain = styled.main`
+  @media only screen and (min-width: 768px) {
+    padding: 30px;
+  }
+  @media only screen and (max-width: 768px) {
+    padding: 15px;
+  }
+  .card {
+    width: 320px;
+    margin-top: 10px;
+    height: 400px;
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    @media only screen and (min-width: 768px) {
+      border: solid 10px #ffffff;
+      padding: 20px 30px;
+      border-radius: 15px;
+      &__container {
+        h1 {
+          font-size: 30px;
+        }
+      }
+    }
+    @media only screen and (max-width: 768px) {
+      border: solid 3px #ffffff;
+      padding: 15px;
+      border-radius: 5px;
+      &__container {
+        h1 {
+          font-size: 35px;
+          text-align: center;
+        }
+      }
+    }
+  }
+`;
+
+export default function HeroCard({ character }: IHeroCardProps) {
   const { id, name, image, status, gender, type } = character;
   const ATTRIBUTE_LIST = [
     { title: "Status", value: status },
@@ -12,16 +52,13 @@ export default function HeroCard({ key, character }: IHeroCardProps) {
     { title: "Type", value: type },
   ];
   return (
-    <main className={styles.details} key={key}>
-      <div
-        className={styles.details__block}
-        style={{ backgroundImage: `url(${image})` }}
-      >
-        <div className={styles.details__block__body}>
+    <HeroCardMain>
+      <div className="card" style={{ backgroundImage: `url(${image})` }}>
+        <div className="card__container">
           <h1>{name}</h1>
           <ListAttributes listAttribute={ATTRIBUTE_LIST} />
         </div>
       </div>
-    </main>
+    </HeroCardMain>
   );
 }
