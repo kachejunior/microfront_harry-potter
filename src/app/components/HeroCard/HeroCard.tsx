@@ -24,7 +24,7 @@ const HeroCardMain = styled.main`
       border: solid 10px #ffffff;
       padding: 20px 30px;
       border-radius: 15px;
-      &__container {
+      &__body {
         h1 {
           font-size: 30px;
         }
