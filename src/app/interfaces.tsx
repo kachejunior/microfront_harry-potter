@@ -11,15 +11,17 @@ export interface ISearchProp {
 }
 
 export interface ICharacter {
-  id: number;
-  name: string;
-  image: string;
-  status: string;
-  gender: string;
-  type: string;
+  id: string;
+  attributes: {
+    name: string;
+    image: string;
+    species: string;
+    gender: string;
+    house: string;
+  };
 }
 
 export interface IHeroCardProps {
-  key: number;
+  key: string;
   character: ICharacter;
 }

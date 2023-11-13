@@ -1,5 +1,5 @@
 "use client";
-import { getAllCharacter } from "./service/rickAndMorty.service";
+import { getAllCharacter } from "./service/harryPotter.service";
 import { useEffect, useState, useRef } from "react";
 import { ICharacter } from "@/app/interfaces";
 import { Pagination } from "@mui/material";
@@ -50,10 +50,10 @@ export default function Main() {
   useEffect(() => {
     if (!initialized.current) {
       initialized.current = true;
-      getAllCharacter({ page })
+      getAllCharacter({ "page[number]": page })
         .then((result) => {
-          setCharacters(result.results);
-          setPages(result.info.pages);
+          setCharacters(result.data);
+          setPages(result.meta.pagination.last);
         })
         .catch((err) => {
           console.warn(err);
@@ -74,10 +74,10 @@ export default function Main() {
 
   const handleSubmit = () => {
     setPage(1);
-    getAllCharacter({ page: 1, name: search })
+    getAllCharacter({ "page[number]": 1, "filter[name_cont]": search })
       .then((result) => {
-        setCharacters(result.results);
-        setPages(result.info.pages);
+        setCharacters(result.data);
+        setPages(result.meta.pagination.last);
       })
       .catch((err) => {
         console.warn(err);

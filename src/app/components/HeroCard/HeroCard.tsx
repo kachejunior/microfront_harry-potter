@@ -45,11 +45,12 @@ const HeroCardMain = styled.main`
 `;
 
 export default function HeroCard({ character }: IHeroCardProps) {
-  const { id, name, image, status, gender, type } = character;
+  const { id, attributes } = character;
+  const { name, image, species, gender, house } = attributes;
   const ATTRIBUTE_LIST = [
-    { title: "Status", value: status },
+    { title: "House", value: house },
     { title: "Gender", value: gender },
-    { title: "Type", value: type },
+    { title: "Specie", value: species },
   ];
   return (
     <HeroCardMain>
